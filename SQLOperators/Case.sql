@@ -1,0 +1,32 @@
+DROP TABLE IF EXISTS STUDENT;
+CREATE TABLE STUDENT(Id INT PRIMARY KEY,Name VARCHAR(100),Salary INT,State VARCHAR(100));
+INSERT INTO STUDENT(Id,Name,Salary,State) VALUES
+(1,'Lion',2000,'Tamil Nadu'),
+(2,'Tiger',10000,'Kerala'),
+(3,'Dog',20000,'Andra'),
+(4,'Cat',30000,'Karnataka'),
+(5,'Fish',40000,'Delhi');
+SELECT Id,Name,Salary,
+CASE
+    WHEN Salary<5000 THEN 'WORST SALARY'
+    WHEN Salary<=10000 THEN 'POOR SALARY'
+    WHEN Salary<=20000 THEN 'AVERAGE SALARY'
+    WHEN Salary<=30000 THEN 'MEDIUM SALARY'
+    ELSE 'GOOD SALARY'
+END AS SALARY_RANGE
+FROM STUDENT;
+SELECT Id,Name,State,
+CASE State
+   WHEN 'Tamil Nadu' THEN 'TAMIL'
+    WHEN 'Kerala' THEN 'Malayalam'
+	WHEN 'Andra' THEN 'Telugu'
+     WHEN 'Karnataka' THEN 'Kannada'
+    ELSE 'HINDI'
+END AS LANGUAGE_SPOKEN 
+FROM STUDENT;
+SELECT Id,Name,State,
+CASE State
+  WHEN 'Tamil Nadu' THEN 0
+  ELSE 1
+END AS Priority
+FROM STUDENT ORDER BY PRIORITY,STATE;
