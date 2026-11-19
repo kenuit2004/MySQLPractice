@@ -1,0 +1,56 @@
+DROP TABLE IF EXISTS STUDENT;
+CREATE TABLE STUDENT(Id INT PRIMARY KEY,Details VARCHAR(100));
+INSERT INTO STUDENT(Id,Details) VALUES
+(1,'{"Name":"Lion","Age":"21"}'),
+(2,'{"Name":"Tiger","Age":"20"}'),
+(3,'{"Name":"Dog","Age":"24"}'),
+(4,'{"Name":"Cat","Age":"27"}');
+SELECT * FROM STUDENT;
+SELECT JSON_OBJECT('Name','Fish','Age',25) AS DETAILS;
+INSERT INTO STUDENT(Id,Details) VALUES
+(5,JSON_OBJECT('Name','Fish','Age',25));
+SELECT * FROM STUDENT;
+SELECT Id,JSON_EXTRACT(Details,'$.Name') AS Name,JSON_EXTRACT(Details,'$.Age') AS Age FROM STUDENT;
+SELECT Id,Details->'$.Name' AS Name,Details->'$.Age' AS Age FROM STUDENT;
+SELECT Id,Details->>'$.Name' AS Name,Details->>'$.Age' AS Age FROM STUDENT;
+SELECT Id,Details,JSON_CONTAINS_PATH(Details,'one','$.Name') AS Name_Contains ,JSON_CONTAINS_PATH(Details,'one','$.City') AS City_Contains FROM STUDENT;
+SELECT Id,Details,JSON_SET(Details,'$.Age',23) AS UPDATED FROM STUDENT WHERE Id=1;
+SELECT Id,Details,JSON_SET(Details,'$.Name','Goat') AS UPDATED FROM STUDENT WHERE Id=1;
+SELECT Id,Details,JSON_SET(Details,'$.Place','Coimbatore') AS UPDATED FROM STUDENT WHERE Id=1;
+UPDATE STUDENT SET Details=JSON_SET(Details,'$.Name','Goat') WHERE Id=1;
+UPDATE STUDENT SET Details=JSON_SET(Details,'$.Age',23) WHERE Id=1;
+SELECT * FROM STUDENT;
+SELECT Id,Details,JSON_INSERT(Details,'$.Place','Coimbatore') AS UPDATED FROM STUDENT WHERE Id=1;
+SELECT Id,Details,JSON_INSERT(Details,'$.Name','Goat') AS UPDATED FROM STUDENT WHERE Id=1;
+SELECT Id,Details,JSON_REPLACE(Details,'$.Name','Goat') AS REPLACE_EXAMPLE FROM STUDENT WHERE Id=1;
+SELECT Id,Details,JSON_REPLACE(Details,'$.Place','Coimbatore')AS REPLACE_EXAMPLE FROM STUDENT WHERE Id=1;
+SELECT ID,Details,JSON_REMOVE(Details,'$.Name') AS REMOVE_EXAMPLE FROM STUDENT WHERE Id=1;
+SELECT ID,Details,JSON_REMOVE(Details,'$.Name','$.Age') AS REMOVE_EXAMPLE FROM STUDENT WHERE Id=1;
+UPDATE STUDENT SET Details=JSON_REMOVE(Details,'$.Name','$.Age') WHERE Id=1;
+SELECT * FROM STUDENT;
+SELECT JSON_OBJECT('Lion','Tiger','Dog','Cat') AS OBJECT_EXAMPLE;
+SELECT JSON_ARRAY('Lion','Tiger','Dog','Cat') AS ARRAY_EXAMPLE;
+SELECT JSON_ARRAY('Lion',21,TRUE,NULL) AS ARRAY_EXAMPLE;
+INSERT INTO STUDENT(Id,Details) VALUES
+(5,'{"Name":"Goat","Age":"30","Skills":["HTML"]}');
+SELECT Id,Details,JSON_ARRAY_APPEND(Details,'$.Skills','CSS','$.Skills','Javascript','$.Skills','Git') AS UPDATED FROM STUDENT WHERE Id=5;
+SELECT * FROM STUDENT;
+UPDATE STUDENT SET Details=JSON_ARRAY_APPEND(Details,'$.Skills','CSS','$.Skills','Javascript','$.Skills','React','$.Skills','Git') WHERE Id=5;
+SELECT * FROM STUDENT;
+SELECT JSON_VALID('{"Name":"Kenuit","Age":25}') AS VALID_EXAMPLE;
+SELECT JSON_VALID('{"Name":"Kenuit","Age":25') AS VALID_EXAMPLE;
+SELECT Id,Details,JSON_VALID(Details) AS VAID_EXAMPLE FROM STUDENT;
+SELECT JSON_KEYS('{"Name":"Kenuit","Age":22,"Place":"Coimbatore"}') AS KEY_EXAMPLE;
+SELECT Id,Details,JSON_KEYS(Details) AS KEYS_EXAMPLE FROM STUDENT;
+SELECT JSON_CONTAINS('{"Name":"Kenuit","Age":24}','24','$.Age') AS CONTAINS_EXAMPLE;
+SELECT JSON_CONTAINS('{"Name":"Kenuit","Age":24}','"Lion"','$.Name') AS CONTAINS_EXAMPLE;
+SELECT JSON_CONTAINS('{"Name":"Kenuit","Age":24}','"Kenuit"','$.Name') AS CONTAINS_EXAMPLE;
+SELECT Id,Details,JSON_CONTAINS(Details,'"React"','$.Skills') AS CONTAINS_EXAMPLE FROM STUDENT WHERE Id=5;
+SELECT Id,Details,JSON_CONTAINS(Details,'"Java"','$.Skills') AS CONTAINS_EXAMPLE FROM STUDENT WHERE Id=5;
+SELECT * FROM JSON_TABLE('[{"Name":"Lion","Age":20},{"Name":"Tiger","Age":21},{"Name":"Dog","Age":22},{"Name":"Cat","Age":24}]','$[*]'COLUMNS(Name VARCHAR(100) PATH '$.Name',Age INT PATH '$.Age')) AS STUDENT;
+SELECT JSON_ARRAYAGG(Id) AS EXAMPLE FROM STUDENT;
+SELECT JSON_ARRAYAGG(JSON_UNQUOTE(JSON_EXTRACT(Details,'$.Name'))) AS EXAMPLE FROM STUDENT;
+SELECT JSON_ARRAYAGG(JSON_UNQUOTE(JSON_EXTRACT(Details,'$.Age'))) AS EXAMPLE FROM STUDENT;
+SELECT JSON_EXTRACT('{"Name":"Kenuit","Age":22}','$.Name') AS EXAMPLE;
+SELECT JSON_UNQUOTE(JSON_EXTRACT('{"Name":"Kenuit","Age":22}','$.Name')) AS EXAMPLE;
+SELECT JSON_OBJECTAGG(Id,JSON_UNQUOTE(JSON_EXTRACT(Details,'$.Name'))) AS EXAMPLE FROM STUDENT;
