@@ -1,0 +1,31 @@
+DROP TABLE IF EXISTS EMP1;
+DROP TABLE IF EXISTS EMP2;
+CREATE TABLE EMP1(Name VARCHAR(100),Roll_Number INT,Location VARCHAR(100),Phone_Number LONG);
+INSERT INTO EMP1(Name,Roll_Number,Location,Phone_Number) VALUES
+('Lion',101,'New York',4875852274),
+('Tiger',102,'London',4751796288),
+('Dog',103,'Toronto',1478525874),
+('Cat',104,'Sydney',3698745214),
+('Fish',105,'Berlin',4569871235);
+SELECT * FROM EMP1;
+CREATE TABLE EMP2(Name VARCHAR(100),Roll_Number INT,Section VARCHAR(100));
+INSERT INTO EMP2(Name,Roll_Number,Section) VALUES
+('Cat',104,'A'),
+('Fish',105,'B'),
+('Tiger',102,'A');
+SELECT * FROM EMP2;
+SELECT EMP1.Name,EMP1.Location,EMP1.Phone_Number FROM EMP1 WHERE Roll_Number IN(SELECT Roll_Number FROM EMP2 WHERE Section='A');
+
+SET SQL_SAFE_UPDATES=0;
+DELETE FROM EMP1 WHERE Roll_Number IN (SELECT Roll_Number FROM (SELECT Roll_Number FROM EMP1 WHERE Roll_Number>103) AS TEMP);
+SET SQL_SAFE_UPDATES=1;
+SELECT * FROM EMP1;
+
+SET SQL_SAFE_UPDATES=0;
+UPDATE EMP1 SET Name='Kenuit' WHERE Location IN(SELECT Location FROM (SELECT Location FROM EMP1 WHERE Location IN ('London','Berlin')) AS TEMP);
+SET SQL_SAFE_UPDATES=1;
+SELECT * FROM EMP1;
+
+SELECT Name,Location FROM (SELECT Name,Roll_Number,Location,Phone_Number FROM EMP1 WHERE Location LIKE 'B%') AS TEMP;
+
+SELECT S1.Name,S1.Location,S1.Roll_Number,TEMP.Section FROM EMP1 AS S1 INNER JOIN (SELECT Name,Roll_Number,Section FROM EMP2 WHERE Section='A') AS TEMP ON S1.Roll_Number=TEMP.Roll_Number;
